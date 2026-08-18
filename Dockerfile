@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# Install build deps, the mongodb PECL extension, and enable Apache rewrite/headers
+# Install build dependencies, MongoDB extension, and enable Apache modules
 RUN apt-get update && apt-get install -y \
         libssl-dev \
         pkg-config \
@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb \
     && a2enmod rewrite headers \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www/html
 
@@ -18,9 +19,10 @@ COPY . /var/www/html
 # uploads/ must be writable by the web server user
 RUN chown -R www-data:www-data /var/www/html/uploads
 
-# Apache listens on $PORT for platforms like Render that assign it dynamically
-RUN sed -i 's/80/${PORT}/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
-ENV PORT=8080
-EXPOSE 8081
+# Script to configure Apache's port at container startup
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
 
-CMD ["apache2-foreground"]
+EXPOSE 80
+
+CMD ["/usr/local/bin/start.sh"]
