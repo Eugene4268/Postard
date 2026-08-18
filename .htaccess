@@ -1,0 +1,11 @@
+# Never serve these directly
+<FilesMatch "^(config\.php|composer\.(json|lock)|db_setup\.php|\.env)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_alias.c>
+    RedirectMatch 403 ^/includes/
+    RedirectMatch 403 ^/vendor/
+</IfModule>
+
+Options -Indexes
