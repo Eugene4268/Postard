@@ -1,0 +1,18 @@
+<?php
+require_once __DIR__ . '/config.php';
+require_login();
+$me = current_user();
+$active = 'settings';
+$pageTitle = 'Appearance';
+include __DIR__ . '/partials/head.php';
+?>
+<div class="app">
+<?php include __DIR__ . '/partials/navbar.php'; ?>
+<main class="main privacy-main appearance-main">
+<header class="settings-header"><h2>Appearance</h2><p>Customize the look and feel of your Postard experience.</p></header>
+<section class="appearance-section"><h3>Theme</h3><p>Choose how Postard looks</p><div class="theme-options"><label class="theme-card"><input type="radio" name="theme" value="light" data-appearance-control="theme"><span class="theme-symbol">☀</span><strong>Light</strong></label><label class="theme-card"><input type="radio" name="theme" value="dark" data-appearance-control="theme"><span class="theme-symbol">◐</span><strong>Dark</strong></label><label class="theme-card"><input type="radio" name="theme" value="system" data-appearance-control="theme"><span class="theme-symbol">▣</span><strong>System</strong></label></div></section>
+<section class="appearance-section"><h3>Accent Color</h3><p>Choose your interface accent color</p><div class="accent-options"><?php foreach (['purple' => '#8d58f2', 'blue' => '#2563eb', 'cyan' => '#0891b2', 'pink' => '#db2777', 'green' => '#16a34a', 'orange' => '#ea580c'] as $name => $color): ?><label><input type="radio" name="accent" value="<?php echo $name; ?>" data-appearance-control="accent"><span style="--swatch:<?php echo $color; ?>"></span><b><?php echo ucfirst($name); ?></b></label><?php endforeach; ?></div></section>
+<section class="appearance-section"><h3>Display</h3><label class="appearance-row"><span>Display Density</span><select data-appearance-control="density"><option value="compact">Compact</option><option value="standard">Standard</option><option value="spacious">Spacious</option></select></label><label class="appearance-row"><span>Text Size</span><select data-appearance-control="textSize"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select></label></section>
+<section class="appearance-section"><h3>Motion</h3><label class="appearance-row"><span>Interface Animations</span><span class="privacy-control"><input class="privacy-toggle-input" type="checkbox" data-appearance-control="animations"><span class="privacy-toggle"></span></span></label><label class="appearance-row"><span>Reduce Motion</span><span class="privacy-control"><input class="privacy-toggle-input" type="checkbox" data-appearance-control="reduceMotion"><span class="privacy-toggle"></span></span></label></section>
+<section class="appearance-section"><h3>Accessibility</h3><label class="appearance-row"><span>High Contrast</span><span class="privacy-control"><input class="privacy-toggle-input" type="checkbox" data-appearance-control="highContrast"><span class="privacy-toggle"></span></span></label><label class="appearance-row"><span>Reduce Transparency</span><span class="privacy-control"><input class="privacy-toggle-input" type="checkbox" data-appearance-control="reduceTransparency"><span class="privacy-toggle"></span></span></label><label class="appearance-row"><span>Focus Indicators</span><span class="privacy-control"><input class="privacy-toggle-input" type="checkbox" data-appearance-control="focusIndicators"><span class="privacy-toggle"></span></span></label></section>
+</main><aside class="right-col"><div class="widget search-box"><form action="search.php" method="get"><i data-lucide="search"></i><input type="text" name="q" placeholder="Search Postard"></form></div></aside></div><script src="assets/js/app.js"></script></body></html>

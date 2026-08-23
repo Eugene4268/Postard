@@ -3,7 +3,7 @@
 $unread = unread_notification_count($me['_id']);
 ?>
 <nav class="sidebar">
-    <a href="home.php" class="brand">Postard</a>
+    <a href="home.php" class="brand"><img src="assets/img/postard_logo.png" alt="Postard"></a>
     <a href="home.php" class="nav-link <?php echo ($active ?? '') === 'home' ? 'active' : ''; ?>">
         <span class="nav-icon">🏠</span> Home
     </a>
@@ -23,11 +23,19 @@ $unread = unread_notification_count($me['_id']);
     <a href="userlist.php" class="nav-link <?php echo ($active ?? '') === 'userlist' ? 'active' : ''; ?>">
         <span class="nav-icon">👥</span> Users
     </a>
+    <a id="settings" href="settings.php" class="nav-link nav-settings <?php echo ($active ?? '') === 'settings' ? 'active' : ''; ?>"><span class="nav-icon"><i data-lucide="settings"></i></span> Settings</a>
+    <button type="button" class="nav-link nav-theme"><span class="nav-icon"><i data-lucide="moon"></i></span> Theme</button>
+    <a href="home.php#compose" class="create-post"><i data-lucide="plus"></i> Create Post</a>
     <a href="logout.php" class="nav-link logout-link">
         <span class="nav-icon">🚪</span> Logout
     </a>
-    <div class="nav-user">
+    <a class="nav-user" href="edit_profile.php">
         <img class="avatar-sm" src="<?php echo h($me['avatar'] ?? 'assets/img/default-avatar.svg'); ?>" alt="">
-        <span>@<?php echo h($me['username']); ?></span>
+        <span class="nav-user-meta"><b><?php echo h($me['displayName'] ?? $me['username']); ?> <i data-lucide="badge-check"></i></b><small>@<?php echo h($me['username']); ?></small></span>
+    </a>
+    <div id="user-menu" class="user-menu" hidden>
+        <a href="profile.php?id=<?php echo h((string) $me['_id']); ?>"><i data-lucide="user-round"></i> Edit Profile</a>
+        <a href="settings.php" class="user-menu-settings"><i data-lucide="settings"></i> Settings</a>
+        <a href="logout.php" class="user-menu-logout"><i data-lucide="log-out"></i> Logout</a>
     </div>
 </nav>

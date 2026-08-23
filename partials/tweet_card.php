@@ -23,11 +23,13 @@ if ($isRepost) {
 $tweetId = (string) $display['_id'];
 $liked = $db->likes->findOne(['tweetId' => $display['_id'], 'userId' => $me['_id']]) !== null;
 $reposted = $db->tweets->findOne(['retweetOf' => $display['_id'], 'authorId' => $me['_id']]) !== null;
+$bookmarked = $db->bookmarks->findOne(['tweetId' => $display['_id'], 'userId' => $me['_id']]) !== null;
 $isOwner = (string) $display['authorId'] === (string) $me['_id'];
+$isComment = $isComment ?? false;
 ?>
-<article class="tweet" data-tweet-id="<?php echo h($tweetId); ?>">
+<article class="tweet<?php echo $isComment ? ' comment' : ''; ?>" data-tweet-id="<?php echo h($tweetId); ?>">
     <?php if ($isRepost): ?>
-        <div class="repost-label">🔁 <a href="profile.php?id=<?php echo h((string) $tweet['authorId']); ?>"><?php echo h($tweet['authorName']); ?></a> reposted</div>
+        <div class="repost-label"><i data-lucide="repeat-2"></i><a href="profile.php?id=<?php echo h((string) $tweet['authorId']); ?>"><?php echo h($tweet['authorName']); ?></a><span>reposted</span></div>
     <?php endif; ?>
     <div class="tweet-row">
         <a href="profile.php?id=<?php echo h((string) $display['authorId']); ?>">
@@ -53,16 +55,18 @@ $isOwner = (string) $display['authorId'] === (string) $me['_id'];
 
             <div class="tweet-actions">
                 <button class="action reply-btn" data-id="<?php echo h($tweetId); ?>" title="Reply">
-                    💬 <span><?php echo (int) ($display['repliesCount'] ?? 0); ?></span>
+                    <i data-lucide="message-circle"></i><span><?php echo (int) ($display['repliesCount'] ?? 0); ?></span>
                 </button>
                 <button class="action repost-btn <?php echo $reposted ? 'active' : ''; ?>" data-id="<?php echo h($tweetId); ?>" title="Repost">
-                    🔁 <span class="repost-count"><?php echo (int) ($display['retweetsCount'] ?? 0); ?></span>
+                    <i data-lucide="repeat-2"></i><span class="repost-count"><?php echo (int) ($display['retweetsCount'] ?? 0); ?></span>
                 </button>
                 <button class="action like-btn <?php echo $liked ? 'active' : ''; ?>" data-id="<?php echo h($tweetId); ?>" title="Like">
-                    <span class="like-icon"><?php echo $liked ? '❤️' : '🤍'; ?></span> <span class="like-count"><?php echo (int) ($display['likesCount'] ?? 0); ?></span>
+                    <i data-lucide="heart" class="like-icon"></i><span class="like-count"><?php echo (int) ($display['likesCount'] ?? 0); ?></span>
                 </button>
+                <button class="action bookmark-btn <?php echo $bookmarked ? 'active' : ''; ?>" data-id="<?php echo h($tweetId); ?>" title="Bookmark"><i data-lucide="bookmark"></i></button>
+                <button class="action share-btn" data-id="<?php echo h($tweetId); ?>" title="Share"><i data-lucide="share"></i></button>
                 <?php if ($isOwner): ?>
-                    <button class="action delete-btn" data-id="<?php echo h($tweetId); ?>" title="Delete">🗑️</button>
+                    <button class="action delete-btn" data-id="<?php echo h($tweetId); ?>" title="Delete"><i data-lucide="trash-2"></i></button>
                 <?php endif; ?>
             </div>
         </div>

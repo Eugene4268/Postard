@@ -2,10 +2,13 @@ FROM php:8.2-apache
 
 # Install build dependencies, MongoDB extension, and enable Apache modules
 RUN apt-get update && apt-get install -y \
+        ca-certificates \
+        openssl \
         libssl-dev \
         pkg-config \
         unzip \
         git \
+    && update-ca-certificates \
     && pecl install mongodb \
     && docker-php-ext-enable mongodb \
     && a2enmod rewrite headers \

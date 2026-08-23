@@ -38,7 +38,11 @@ $tweet = $mainTweet;
     <main class="main">
         <div class="main-header"><h2>Post</h2></div>
 
-        <?php include __DIR__ . '/partials/tweet_card.php'; ?>
+        <section class="post-thread">
+            <?php $isComment = false; include __DIR__ . '/partials/tweet_card.php'; ?>
+
+            <?php foreach ($replies as $tweet): $isComment = true; include __DIR__ . '/partials/tweet_card.php'; endforeach; ?>
+        </section>
 
         <form class="composer composer-form" id="reply-box" action="create_tweet.php" method="post" enctype="multipart/form-data" data-maxlen="<?php echo MAX_TWEET_LENGTH; ?>">
             <?php echo csrf_field(); ?>
@@ -59,7 +63,6 @@ $tweet = $mainTweet;
             </div>
         </form>
 
-        <?php foreach ($replies as $tweet): include __DIR__ . '/partials/tweet_card.php'; endforeach; ?>
     </main>
 
     <aside class="right-col">

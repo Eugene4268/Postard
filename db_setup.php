@@ -18,6 +18,7 @@ $db->tweets->createIndex(['retweetOf' => 1]);
 $db->tweets->createIndex(['body' => 'text']);
 
 $db->likes->createIndex(['tweetId' => 1, 'userId' => 1], ['unique' => true]);
+$db->bookmarks->createIndex(['tweetId' => 1, 'userId' => 1], ['unique' => true]);
 
 $db->following->createIndex(['follower' => 1, 'followingId' => 1], ['unique' => true]);
 $db->following->createIndex(['followingId' => 1]);

@@ -32,4 +32,4 @@ $db->messages->insertOne([
 
 create_notification($recipientId, $me, 'message');
 
-redirect('conversation.php?id=' . (string) $recipientId);
+redirect('messages.php?id=' . (string) $recipientId);

@@ -54,6 +54,23 @@ function create_notification($toUserId, $fromUser, $type, $tweetId = null)
         return; // don't notify yourself
     }
 
+    $recipient = $db->users->findOne(['_id' => $toUserId], ['projection' => ['notificationPreferences' => 1]]);
+    $preferences = (array) ($recipient['notificationPreferences'] ?? []);
+    if (!empty($preferences['pauseAll'])) {
+        return;
+    }
+    $preferenceKey = ['like' => 'someoneLikes', 'follow' => 'someoneFollows', 'reply' => 'someoneComments', 'retweet' => 'someoneShares', 'message' => 'newMessages'][$type] ?? null;
+    if ($preferenceKey !== null && array_key_exists($preferenceKey, $preferences) && !$preferences[$preferenceKey]) {
+        return;
+    }
+    if (!empty($preferences['quietMode'])) {
+        $start = (int) ($preferences['quietStart'] ?? 22);
+        $end = (int) ($preferences['quietEnd'] ?? 7);
+        $hour = (int) date('G');
+        $quiet = $start < $end ? ($hour >= $start && $hour < $end) : ($hour >= $start || $hour < $end);
+        if ($quiet) return;
+    }
+
     $db->notifications->insertOne([
         'userId' => $toUserId,
         'fromUserId' => $fromUser['_id'],

@@ -45,11 +45,22 @@ function csrf_verify()
 function time_ago($datetime)
 {
     if ($datetime instanceof MongoDB\BSON\UTCDateTime) {
-        $datetime = $datetime->toDateTime()->format('Y-m-d H:i:s');
+        // Use the BSON epoch directly so the server timezone cannot shift the result.
+        $timestamp = $datetime->toDateTime()->getTimestamp();
+    } elseif ($datetime instanceof DateTimeInterface) {
+        $timestamp = $datetime->getTimestamp();
+    } elseif (is_numeric($datetime)) {
+        $timestamp = (int) $datetime;
+        if ($timestamp > 100000000000) {
+            $timestamp = (int) floor($timestamp / 1000);
+        }
+    } else {
+        $timestamp = strtotime((string) $datetime);
     }
-    $timestamp = is_numeric($datetime) ? $datetime : strtotime($datetime);
+    if ($timestamp === false) return '';
     $diff = time() - $timestamp;
 
+    if ($diff < 0) $diff = 0;
     if ($diff < 60) return $diff . 's';
     if ($diff < 3600) return floor($diff / 60) . 'm';
     if ($diff < 86400) return floor($diff / 3600) . 'h';
